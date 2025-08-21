@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -6,14 +7,24 @@ import java.io.IOException;
 public class ImageProcessor {
     public ImageProcessor(String imagePath) throws IOException{
             BufferedImage myImg = ImageIO.read(new File(imagePath));
+
+            Image originalImage= myImg.getScaledInstance(myImg.getWidth() / 4, myImg.getHeight() / 4, Image.SCALE_DEFAULT);
+            int type = ((myImg.getType() == 0) ? BufferedImage.TYPE_INT_ARGB : myImg.getType());
+            BufferedImage resizedImage = new BufferedImage(myImg.getWidth() / 4, myImg.getHeight() / 4, type);
+            Graphics2D g2d = resizedImage.createGraphics();
+            g2d.drawImage(myImg, 0, 0, myImg.getWidth() / 4, myImg.getHeight() / 4, null);
+            g2d.dispose();
+
             WriteFile writeFile = new WriteFile();
 
-            int height = myImg.getHeight();
-            int width = myImg.getWidth();
+            //int height = myImg.getHeight();
+            //int width = myImg.getWidth();
+            int height = resizedImage.getHeight();
+            int width = resizedImage.getWidth();
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     String asciiCharacter = "";
-                    int clr = myImg.getRGB(x, y);
+                    int clr = resizedImage.getRGB(x, y);
                     int red = (clr & 0x00ff0000) >> 16;
                     int green = (clr & 0x0000ff00) >> 8;
                     int blue = clr & 0x000000ff;
@@ -33,5 +44,6 @@ public class ImageProcessor {
                 writeFile.writeNewLine();
         }
             writeFile.closeWriter();
+        System.out.println("Ascii art created! :D");
     }
 }
