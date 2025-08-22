@@ -17,8 +17,6 @@ public class ImageProcessor {
 
             WriteFile writeFile = new WriteFile();
 
-            //int height = myImg.getHeight();
-            //int width = myImg.getWidth();
             int height = resizedImage.getHeight();
             int width = resizedImage.getWidth();
             for (int y = 0; y < height; y++) {
